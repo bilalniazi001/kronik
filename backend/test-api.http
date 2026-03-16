@@ -1,0 +1,67 @@
+### Test Server
+GET http://localhost:5000/health
+
+### User Signup
+POST http://localhost:5000/api/auth/signup
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "Test@123",
+    "phone": "03123456789",
+    "cnic": "1234512345678",
+    "address": "Karachi, Pakistan"
+}
+
+### User Login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "john@example.com",
+    "password": "Test@123"
+}
+
+### Admin Login
+POST http://localhost:5000/api/auth/admin/login
+Content-Type: application/json
+
+{
+    "email": "admin@attendly.com",
+    "password": "Admin@123"
+}
+
+### Get User Profile (after login, use token)
+GET http://localhost:5000/api/users/profile
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### Check In
+POST http://localhost:5000/api/attendance/checkin
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
+{
+    "latitude": 24.8607,
+    "longitude": 67.0011,
+    "location_name": "Office"
+}
+
+### Check Out
+POST http://localhost:5000/api/attendance/checkout
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
+{
+    "latitude": 24.8607,
+    "longitude": 67.0011,
+    "location_name": "Office"
+}
+
+### Get Today's Status
+GET http://localhost:5000/api/attendance/today
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### Get User Reports
+GET http://localhost:5000/api/users/reports?start_date=2024-01-01&end_date=2024-01-31
+Authorization: Bearer YOUR_TOKEN_HERE

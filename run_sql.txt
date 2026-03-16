@@ -1,0 +1,1 @@
+Apni E:\Programs\OnestaSQL.sql file ko kisi text editor (maslan Notepad ya VS Code) mein open karein, saara text copy karein, aur TiDB Cloud ke SQL Editor ya Chat2Query mein paste karke RUN / EXECUTE karein.
