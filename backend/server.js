@@ -30,7 +30,20 @@ app.use(morgan('dev'));
 
 // CORS configuration
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+        const allowedOrigins = [
+            process.env.FRONTEND_URL,
+            'http://localhost:3000',
+            'http://localhost:5173'
+        ].filter(Boolean);
+        // Allow requests with no origin (mobile apps, curl, Postman, etc.)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.warn('CORS blocked origin:', origin);
+            callback(null, true);
+        }
+    },
     credentials: true,
     optionsSuccessStatus: 200
 }));
@@ -116,29 +129,31 @@ app.use((req, res) => {
     });
 });
 
-// Start server
+// Start server (only in development, Vercel handles this in production)
 const PORT = process.env.PORT || 5000;
 
-const startServer = async () => {
-    try {
-        // Test database connection
-        const dbConnected = await testConnection();
-        if (!dbConnected) {
-            console.warn('  Server starting without database connection');
+if (process.env.VERCEL !== '1') {
+    const startServer = async () => {
+        try {
+            // Test database connection
+            const dbConnected = await testConnection();
+            if (!dbConnected) {
+                console.warn('  Server starting without database connection');
+            }
+
+            app.listen(PORT, () => {
+                console.log(` Server running on port ${PORT}`);
+                console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
+                console.log(` API URL: http://localhost:${PORT}`);
+            });
+        } catch (error) {
+            console.error(' Failed to start server:', error);
+            process.exit(1);
         }
+    };
 
-        app.listen(PORT, () => {
-            console.log(` Server running on port ${PORT}`);
-            console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
-            console.log(` API URL: http://localhost:${PORT}`);
-        });
-    } catch (error) {
-        console.error(' Failed to start server:', error);
-        process.exit(1);
-    }
-};
-
-startServer();
+    startServer();
+}
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
