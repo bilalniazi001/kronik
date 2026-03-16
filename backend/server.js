@@ -129,10 +129,9 @@ app.use((req, res) => {
     });
 });
 
-// Start server (only in development, Vercel handles this in production)
-const PORT = process.env.PORT || 5000;
-
-if (process.env.VERCEL !== '1') {
+if (process.env.VERCEL === '1') {
+    // Vercel handles the server start
+} else {
     const startServer = async () => {
         try {
             // Test database connection
